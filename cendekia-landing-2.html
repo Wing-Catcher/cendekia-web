@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Les Privat Cendekia – Guru Datang ke Rumah</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --navy:#1a2e6c;--blue:#2352d8;--sky:#41b0f0;
+      --white:#fff;--text:#1e2a45;--soft:#f4f8ff;--muted:#6b7a99;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Nunito',sans-serif;background:var(--soft);color:var(--text);overflow-x:hidden;}
+
+    /* ── BOTTOM NAV TABS ── */
+    .bottom-nav{
+      position:fixed;bottom:0;left:0;right:0;z-index:900;
+      background:var(--white);
+      display:flex;
+      box-shadow:0 -2px 20px rgba(26,46,108,.12);
+      border-top:1px solid #e4ecf7;
+    }
+    .bnav-item{
+      flex:1;display:flex;flex-direction:column;align-items:center;
+      padding:10px 4px 12px;gap:3px;cursor:pointer;
+      color:var(--muted);font-size:10px;font-weight:700;
+      letter-spacing:.4px;transition:color .2s;
+      border:none;background:none;-webkit-tap-highlight-color:transparent;
+    }
+    .bnav-item .bnav-icon{font-size:22px;line-height:1;}
+    .bnav-item.active{color:var(--blue);}
+    .bnav-item.active .bnav-icon{filter:drop-shadow(0 0 4px rgba(35,82,216,.4));}
+
+    /* ── PAGE TABS ── */
+    .page{display:none;padding-bottom:80px;}
+    .page.active{display:block;}
+
+    /* ── HERO ── */
+    .hero{
+      background:linear-gradient(150deg,var(--navy) 0%,var(--blue) 100%);
+      padding:0 0 48px;position:relative;overflow:hidden;
+    }
+    .hero::before{content:'';position:absolute;width:340px;height:340px;
+      border-radius:50%;background:rgba(255,255,255,.05);top:-80px;right:-80px;}
+    .hero::after{content:'';position:absolute;width:200px;height:200px;
+      border-radius:50%;background:rgba(255,255,255,.04);bottom:-60px;left:-60px;}
+
+    nav{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 12px;}
+    .logo{display:flex;align-items:center;gap:10px;}
+    .logo-icon{width:44px;height:44px;background:var(--white);border-radius:12px;
+      display:flex;align-items:center;justify-content:center;font-size:22px;}
+    .logo-text h1{font-family:'Poppins',sans-serif;font-size:16px;font-weight:800;
+      color:var(--white);line-height:1.1;}
+    .logo-text span{font-size:11px;color:rgba(255,255,255,.7);}
+    .badge-promo{background:var(--sky);color:var(--white);font-size:11px;font-weight:700;
+      padding:6px 14px;border-radius:20px;letter-spacing:.4px;}
+
+    .hero-content{padding:28px 24px 0;display:flex;flex-direction:column;gap:20px;}
+    .hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.2);color:var(--sky);font-size:12px;font-weight:700;
+      padding:6px 14px;border-radius:20px;width:fit-content;letter-spacing:.5px;}
+    .hero-tag span{font-size:14px;}
+
+    .hero-headline{font-family:'Poppins',sans-serif;color:var(--white);}
+    .hero-headline .line1{font-size:48px;font-weight:900;line-height:1;display:block;}
+    .hero-headline .line2{font-size:48px;font-weight:900;line-height:1;display:block;color:var(--sky);}
+    .hero-headline .sub{font-size:20px;font-weight:600;display:block;
+      color:rgba(255,255,255,.85);margin-top:8px;}
+
+    .hero-photo-wrap{position:relative;height:220px;}
+    .hero-circle{
+      position:absolute;right:-10px;top:0;width:210px;height:210px;
+      border-radius:50%;background:rgba(255,255,255,.1);
+      border:3px solid rgba(255,255,255,.25);overflow:hidden;cursor:pointer;
+    }
+    .hero-circle img{width:100%;height:100%;object-fit:cover;}
+    .hero-circle .upload-hint{
+      position:absolute;bottom:0;left:0;right:0;
+      background:rgba(26,46,108,.65);color:#fff;
+      font-size:10px;font-weight:700;text-align:center;
+      padding:6px 4px;letter-spacing:.3px;
+    }
+    .hero-stat{position:absolute;left:0;bottom:16px;background:var(--white);
+      border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:10px;
+      box-shadow:0 8px 28px rgba(26,46,108,.2);}
+    .stat-icon{font-size:24px;}
+    .stat-label{font-size:11px;color:var(--muted);font-weight:600;}
+    .stat-val{font-size:18px;font-weight:900;color:var(--navy);line-height:1;}
+
+    .slogan-band{background:var(--sky);text-align:center;padding:14px 24px;
+      font-size:13px;font-weight:800;color:var(--white);letter-spacing:.6px;}
+    .slogan-band em{font-style:normal;display:block;font-size:11px;font-weight:600;
+      opacity:.85;margin-top:2px;}
+
+    section{padding:40px 20px;}
+    .section-title{font-family:'Poppins',sans-serif;font-size:22px;font-weight:800;
+      color:var(--navy);margin-bottom:6px;}
+    .section-title span{color:var(--sky);}
+    .section-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:24px;}
+
+    /* subjects */
+    .card-subjects{background:var(--navy);border-radius:24px;overflow:hidden;}
+    .card-subjects-header{background:var(--sky);padding:14px 20px;text-align:center;
+      font-family:'Poppins',sans-serif;font-size:17px;font-weight:800;
+      color:var(--white);letter-spacing:.5px;}
+    .card-subjects-body{padding:20px;display:flex;flex-direction:column;gap:12px;}
+    .subject-item{display:flex;align-items:center;gap:12px;color:var(--white);
+      font-size:15px;font-weight:700;}
+    .subject-check{width:28px;height:28px;background:var(--sky);border-radius:50%;
+      display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+
+    /* pricing */
+    .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px;}
+    .price-card{border-radius:20px;padding:20px 16px;text-align:center;
+      position:relative;overflow:hidden;}
+    .price-card.smp{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);
+      color:var(--white);border:2px solid var(--sky);}
+    .price-card.sd{background:linear-gradient(135deg,#f0f8ff 0%,#d8ecff 100%);
+      color:var(--navy);border:2px solid var(--blue);}
+    .price-level{font-family:'Poppins',sans-serif;font-size:13px;font-weight:800;
+      letter-spacing:2px;margin-bottom:10px;opacity:.8;}
+    .price-amount{font-family:'Poppins',sans-serif;font-size:26px;font-weight:900;line-height:1;}
+    .price-unit{font-size:11px;font-weight:600;opacity:.7;margin-top:4px;}
+    .price-badge{position:absolute;top:10px;right:-14px;background:var(--sky);
+      color:var(--white);font-size:10px;font-weight:800;padding:3px 20px 3px 10px;letter-spacing:.5px;}
+
+    /* features */
+    .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .feat-card{background:var(--white);border-radius:18px;padding:18px 14px;
+      display:flex;flex-direction:column;gap:8px;box-shadow:0 4px 16px rgba(26,46,108,.07);}
+    .feat-icon{font-size:28px;}
+    .feat-title{font-family:'Poppins',sans-serif;font-size:13px;font-weight:800;
+      color:var(--navy);line-height:1.3;}
+    .feat-desc{font-size:11px;color:var(--muted);font-weight:600;}
+
+    /* testimonial */
+    .testi-section{background:var(--white);}
+    .testi-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;}
+    .testi-scroll::-webkit-scrollbar{display:none;}
+    .testi-card{min-width:240px;background:var(--soft);border-radius:18px;padding:18px;
+      border-left:4px solid var(--sky);flex-shrink:0;}
+    .testi-stars{font-size:14px;margin-bottom:8px;}
+    .testi-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.6;margin-bottom:12px;}
+    .testi-author{display:flex;align-items:center;gap:10px;}
+    .testi-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+      justify-content:center;font-size:16px;font-weight:800;color:var(--white);}
+    .testi-name{font-size:13px;font-weight:800;color:var(--navy);}
+    .testi-role{font-size:11px;color:var(--muted);}
+
+    /* cta */
+    .cta-section{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);
+      padding:48px 24px;text-align:center;}
+    .cta-title{font-family:'Poppins',sans-serif;font-size:26px;font-weight:900;
+      color:var(--white);margin-bottom:8px;line-height:1.2;}
+    .cta-title span{color:var(--sky);}
+    .cta-sub{font-size:14px;color:rgba(255,255,255,.75);margin-bottom:28px;font-weight:600;}
+    .cta-buttons{display:flex;flex-direction:column;align-items:center;gap:0;}
+    .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--sky);
+      color:var(--white);font-family:'Poppins',sans-serif;font-size:16px;font-weight:800;
+      padding:16px 32px;border-radius:50px;text-decoration:none;
+      box-shadow:0 8px 28px rgba(65,176,240,.4);transition:transform .2s;letter-spacing:.3px;}
+    .btn-primary:active{transform:scale(.97);}
+    .btn-secondary{display:inline-flex;align-items:center;gap:10px;background:transparent;
+      color:var(--white);font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;
+      padding:14px 28px;border-radius:50px;text-decoration:none;
+      border:2px solid rgba(255,255,255,.4);margin-top:12px;}
+
+    /* contact */
+    .contact-section{background:var(--white);padding:36px 20px;}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .contact-item{background:var(--soft);border-radius:16px;padding:16px;
+      display:flex;flex-direction:column;gap:4px;}
+    .contact-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.5px;}
+    .contact-val{font-size:13px;font-weight:800;color:var(--navy);}
+    .contact-icon{font-size:22px;margin-bottom:4px;}
+
+    footer{background:var(--navy);color:rgba(255,255,255,.6);text-align:center;
+      padding:20px;font-size:12px;font-weight:600;}
+    footer strong{color:var(--sky);}
+
+    /* ── FLOATING WA ── */
+    .wa-float{position:fixed;bottom:88px;right:20px;z-index:800;
+      display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+    .wa-label{background:var(--white);color:var(--navy);font-size:12px;font-weight:800;
+      padding:6px 14px;border-radius:20px;box-shadow:0 4px 16px rgba(0,0,0,.15);
+      white-space:nowrap;animation:floatUp 3s ease-in-out infinite;}
+    .wa-btn{width:52px;height:52px;background:#25D366;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;font-size:26px;
+      box-shadow:0 8px 24px rgba(37,211,102,.4);text-decoration:none;
+      animation:floatUp 3s ease-in-out infinite;}
+    @keyframes floatUp{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+
+    /* ── REVEAL ── */
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .55s ease,transform .55s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .reveal-delay-1{transition-delay:.1s;}
+    .reveal-delay-2{transition-delay:.2s;}
+    .reveal-delay-3{transition-delay:.3s;}
+    .reveal-delay-4{transition-delay:.4s;}
+
+    /* ── FORM PAGE ── */
+    .form-page{background:var(--soft);min-height:100vh;}
+    .form-header{
+      background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);
+      padding:28px 24px 32px;
+    }
+    .form-header h2{font-family:'Poppins',sans-serif;font-size:22px;font-weight:900;
+      color:var(--white);margin-bottom:4px;}
+    .form-header p{font-size:13px;color:rgba(255,255,255,.75);font-weight:600;}
+
+    .form-body{padding:24px 20px;display:flex;flex-direction:column;gap:18px;}
+
+    .form-group{display:flex;flex-direction:column;gap:6px;}
+    .form-label{font-size:12px;font-weight:800;color:var(--navy);letter-spacing:.4px;}
+    .form-label span{color:#e53e3e;}
+
+    .form-input,.form-select,.form-textarea{
+      width:100%;padding:14px 16px;border-radius:14px;
+      border:2px solid #d8e6f7;background:var(--white);
+      font-family:'Nunito',sans-serif;font-size:15px;font-weight:600;color:var(--text);
+      outline:none;transition:border-color .2s,box-shadow .2s;
+      -webkit-appearance:none;appearance:none;
+    }
+    .form-input:focus,.form-select:focus,.form-textarea:focus{
+      border-color:var(--sky);box-shadow:0 0 0 3px rgba(65,176,240,.15);}
+    .form-textarea{resize:none;height:90px;line-height:1.5;}
+
+    /* subject chips */
+    .chips-wrap{display:flex;flex-wrap:wrap;gap:8px;}
+    .chip{
+      padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;
+      cursor:pointer;border:2px solid #d8e6f7;background:var(--white);
+      color:var(--muted);transition:all .15s;-webkit-tap-highlight-color:transparent;
+      user-select:none;
+    }
+    .chip.selected{background:var(--navy);border-color:var(--navy);color:var(--white);}
+    .chip.konsultasi{border-color:var(--sky);color:var(--sky);}
+    .chip.konsultasi.selected{background:var(--sky);color:var(--white);}
+
+    .custom-input-wrap{
+      margin-top:10px;overflow:hidden;
+      max-height:0;transition:max-height .3s ease;
+    }
+    .custom-input-wrap.open{max-height:120px;}
+
+    /* preview box */
+    .preview-box{
+      background:var(--white);border-radius:16px;padding:16px;
+      border:2px dashed #d8e6f7;
+    }
+    .preview-label{font-size:11px;font-weight:800;color:var(--muted);
+      letter-spacing:.5px;margin-bottom:8px;}
+    .preview-text{font-size:13px;font-weight:600;color:var(--text);
+      line-height:1.7;white-space:pre-wrap;}
+
+    .btn-send{
+      width:100%;padding:18px;border-radius:50px;border:none;cursor:pointer;
+      background:linear-gradient(90deg,#25D366,#1ebe5a);
+      color:var(--white);font-family:'Poppins',sans-serif;
+      font-size:17px;font-weight:800;letter-spacing:.3px;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      box-shadow:0 8px 24px rgba(37,211,102,.35);
+      transition:transform .2s,box-shadow .2s;
+    }
+    .btn-send:active{transform:scale(.97);box-shadow:0 4px 12px rgba(37,211,102,.25);}
+    .btn-send:disabled{opacity:.5;cursor:not-allowed;}
+
+    .required-note{font-size:11px;color:var(--muted);font-weight:600;text-align:center;}
+
+    /* ── INFO PAGE ── */
+    .info-page{background:var(--soft);}
+  </style>
+</head>
+<body>
+
+  <!-- ════ PAGE: BERANDA ════ -->
+  <div class="page active" id="page-home">
+
+    <section class="hero">
+      <nav>
+        <div class="logo">
+          <div class="logo-icon">🏠</div>
+          <div class="logo-text">
+            <h1>Cendekia Co.</h1>
+            <span>Gandusari, Trenggalek</span>
+          </div>
+        </div>
+        <div class="badge-promo">✨ Promo</div>
+      </nav>
+
+      <div class="hero-content">
+        <div class="hero-tag"><span>📚</span> Guru Datang ke Rumah</div>
+
+        <h2 class="hero-headline">
+          <span class="line1">Les</span>
+          <span class="line2">Privat</span>
+          <span class="sub">Belajar lebih mudah &amp; menyenangkan!</span>
+        </h2>
+
+        <div class="hero-photo-wrap">
+          <!-- Clickable circle — tap to upload custom photo -->
+          <div class="hero-circle" id="heroCircle" title="Tap untuk ganti foto">
+            <img id="heroImg"
+              src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&auto=format&fit=crop"
+              alt="Anak belajar"/>
+            <div class="upload-hint">📷 Ganti Foto</div>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" style="display:none"/>
+
+          <div class="hero-stat">
+            <div class="stat-icon">🎓</div>
+            <div>
+              <div class="stat-label">Mata Pelajaran</div>
+              <div class="stat-val">5+ Subjek</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="slogan-band">
+      CENDEKIA
+      <em>"Cerdas, Edukatif, Kreatif, Inspiratif, Aktif"</em>
+    </div>
+
+    <!-- MATA PELAJARAN -->
+    <section style="background:var(--soft);">
+      <div class="section-title reveal">📖 Mata <span>Pelajaran</span></div>
+      <div class="section-sub reveal reveal-delay-1">SD &amp; SMP – semua mata pelajaran tersedia</div>
+      <div class="card-subjects reveal reveal-delay-2">
+        <div class="card-subjects-header">SD | SMP</div>
+        <div class="card-subjects-body">
+          <div class="subject-item"><div class="subject-check">✓</div>Matematika</div>
+          <div class="subject-item"><div class="subject-check">✓</div>Bahasa Inggris</div>
+          <div class="subject-item"><div class="subject-check">✓</div>IPA &amp; IPS</div>
+          <div class="subject-item"><div class="subject-check">✓</div>Dan Semua Mata Pelajaran Lainnya</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HARGA -->
+    <section style="background:var(--white);">
+      <div class="section-title reveal">💰 Harga <span>Terjangkau</span></div>
+      <div class="section-sub reveal reveal-delay-1">90 menit per sesi · fleksibel jadwalnya</div>
+      <div class="pricing-grid">
+        <div class="price-card smp reveal reveal-delay-2">
+          <div class="price-badge">POPULER</div>
+          <div class="price-level">SMP</div>
+          <div class="price-amount">Rp 25K</div>
+          <div class="price-unit">/ 90 menit</div>
+        </div>
+        <div class="price-card sd reveal reveal-delay-3">
+          <div class="price-level">SD</div>
+          <div class="price-amount">Rp 15K</div>
+          <div class="price-unit">/ 90 menit</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEUNGGULAN -->
+    <section style="background:var(--soft);">
+      <div class="section-title reveal">⭐ Kenapa <span>Cendekia?</span></div>
+      <div class="section-sub reveal reveal-delay-1">Beda dari les biasa</div>
+      <div class="features-grid">
+        <div class="feat-card reveal reveal-delay-1">
+          <div class="feat-icon">🏠</div>
+          <div class="feat-title">Guru Datang ke Rumah</div>
+          <div class="feat-desc">Anak belajar nyaman di rumah sendiri</div>
+        </div>
+        <div class="feat-card reveal reveal-delay-2">
+          <div class="feat-icon">🎯</div>
+          <div class="feat-title">Materi Pas Kebutuhan</div>
+          <div class="feat-desc">Sesuai kurikulum sekolah anak</div>
+        </div>
+        <div class="feat-card reveal reveal-delay-3">
+          <div class="feat-icon">👩‍🏫</div>
+          <div class="feat-title">Guru Berpengalaman</div>
+          <div class="feat-desc">Sabar, ramah, dan profesional</div>
+        </div>
+        <div class="feat-card reveal reveal-delay-4">
+          <div class="feat-icon">📅</div>
+          <div class="feat-title">Jadwal Fleksibel</div>
+          <div class="feat-desc">Pilih waktu yang cocok buat anak</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIAL -->
+    <section class="testi-section">
+      <div class="section-title reveal">💬 Cerita <span>Mereka</span></div>
+      <div class="section-sub reveal reveal-delay-1">Orang tua yang sudah bergabung</div>
+      <div class="testi-scroll">
+
+        <div class="testi-card">
+          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+          <div class="testi-text">"Tadinya anak saya males-malesan kalau belajar, tapi sekarang malah nanya-nanya sendiri kapan gurunya datang. Alhamdulillah nilainya juga nambah."</div>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#4a90d9;">R</div>
+            <div>
+              <div class="testi-name">Ratih, Trenggalek</div>
+              <div class="testi-role">Ibu siswa kelas 5 SD</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card">
+          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+          <div class="testi-text">"Biayanya terjangkau banget buat ukuran les privat. Guru yang datang juga nggak kaku, nyambung sama anak saya yang susah diajak fokus."</div>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#2d7a4f;">H</div>
+            <div>
+              <div class="testi-name">Hendra, Gandusari</div>
+              <div class="testi-role">Ayah siswa kelas 8 SMP</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card">
+          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+          <div class="testi-text">"Kakak sama adik saya les bareng di sini, SD sama SMP. Gurunya beda tapi dua-duanya enak ngajarnya. Rekomen deh buat yang di Trenggalek."</div>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#8b5cf6;">N</div>
+            <div>
+              <div class="testi-name">Nadia, Trenggalek</div>
+              <div class="testi-role">Orang tua 2 siswa</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card">
+          <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+          <div class="testi-text">"Awalnya ragu karena harganya murah, takutnya kualitasnya juga seadanya. Ternyata gurunya beneran niat ngajar dan sabar nunggu anak saya ngerti."</div>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#d97706;">W</div>
+            <div>
+              <div class="testi-name">Wulan, Trenggalek</div>
+              <div class="testi-role">Ibu siswa kelas 3 SD</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <h2 class="cta-title">Mulai Belajar <span>Sekarang!</span></h2>
+      <p class="cta-sub">Daftarkan anak Anda hari ini &amp; raih prestasi terbaik</p>
+      <div class="cta-buttons">
+        <button class="btn-primary" onclick="switchTab('daftar')" style="border:none;cursor:pointer;">
+          📝 Isi Form Pendaftaran
+        </button>
+        <a href="https://wa.me/6283850387328?text=Halo%20Cendekia%2C%20saya%20ingin%20info%20les%20privat" class="btn-secondary" target="_blank">
+          📲 Chat WhatsApp Dulu
+        </a>
+      </div>
+    </section>
+
+    <!-- KONTAK -->
+    <section class="contact-section">
+      <div class="section-title reveal" style="margin-bottom:16px;">📬 Kontak <span>Kami</span></div>
+      <div class="contact-grid">
+        <div class="contact-item reveal reveal-delay-1">
+          <div class="contact-icon">📞</div>
+          <div class="contact-label">TELEPON 1</div>
+          <div class="contact-val">0838-5038-7328</div>
+        </div>
+        <div class="contact-item reveal reveal-delay-2">
+          <div class="contact-icon">📱</div>
+          <div class="contact-label">TELEPON 2</div>
+          <div class="contact-val">0877-5412-1541</div>
+        </div>
+        <div class="contact-item reveal reveal-delay-3" style="grid-column:1/-1;">
+          <div class="contact-icon">🌐</div>
+          <div class="contact-label">WEBSITE</div>
+          <div class="contact-val">cendekia-web.vercel.app</div>
+        </div>
+        <div class="contact-item reveal reveal-delay-4" style="grid-column:1/-1;">
+          <div class="contact-icon">📍</div>
+          <div class="contact-label">LOKASI</div>
+          <div class="contact-val">Gandusari, Trenggalek</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="footerYear"></span> <strong>Cendekia Co.</strong> · Gandusari, Trenggalek<br/>
+      "Cerdas, Edukatif, Kreatif, Inspiratif, Aktif"
+    </footer>
+
+  </div><!-- /page-home -->
+
+
+  <!-- ════ PAGE: DAFTAR ════ -->
+  <div class="page form-page" id="page-daftar">
+
+    <div class="form-header">
+      <h2>📝 Form Pendaftaran</h2>
+      <p>Isi data di bawah, lalu kirim langsung ke WhatsApp kami</p>
+    </div>
+
+    <div class="form-body">
+
+      <!-- NAMA -->
+      <div class="form-group">
+        <label class="form-label">Nama Lengkap Siswa <span>*</span></label>
+        <input class="form-input" id="fNama" type="text" placeholder="Contoh: Budi Santoso" maxlength="60"/>
+      </div>
+
+      <!-- ALAMAT -->
+      <div class="form-group">
+        <label class="form-label">Alamat Rumah <span>*</span></label>
+        <textarea class="form-textarea" id="fAlamat" placeholder="Desa/jalan, RT/RW, kecamatan..."></textarea>
+      </div>
+
+      <!-- KELAS -->
+      <div class="form-group">
+        <label class="form-label">Kelas <span>*</span></label>
+        <select class="form-select" id="fKelas">
+          <option value="">— Pilih kelas —</option>
+          <optgroup label="SD">
+            <option>SD Kelas 1</option><option>SD Kelas 2</option>
+            <option>SD Kelas 3</option><option>SD Kelas 4</option>
+            <option>SD Kelas 5</option><option>SD Kelas 6</option>
+          </optgroup>
+          <optgroup label="SMP">
+            <option>SMP Kelas 7</option><option>SMP Kelas 8</option><option>SMP Kelas 9</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <!-- MATA PELAJARAN -->
+      <div class="form-group">
+        <label class="form-label">Mata Pelajaran <span>*</span></label>
+        <div class="chips-wrap" id="chipsWrap">
+          <div class="chip" data-val="Matematika">Matematika</div>
+          <div class="chip" data-val="Bahasa Inggris">Bahasa Inggris</div>
+          <div class="chip" data-val="IPA">IPA</div>
+          <div class="chip" data-val="IPS">IPS</div>
+          <div class="chip" data-val="Bahasa Indonesia">Bahasa Indonesia</div>
+          <div class="chip konsultasi" data-val="konsultasi">🗣 Mau Konsultasi Dulu</div>
+        </div>
+        <div class="custom-input-wrap" id="customWrap">
+          <input class="form-input" id="fCustomMapel"
+            placeholder="Mata pelajaran lain / topik konsultasi..."
+            style="margin-top:0;" maxlength="120"/>
+        </div>
+      </div>
+
+      <!-- PREVIEW PESAN -->
+      <div class="form-group">
+        <div class="preview-box">
+          <div class="preview-label">PREVIEW PESAN WHATSAPP</div>
+          <div class="preview-text" id="previewText">Isi form di atas untuk melihat preview pesan...</div>
+        </div>
+      </div>
+
+      <p class="required-note">* wajib diisi sebelum mengirim</p>
+
+      <button class="btn-send" id="btnSend" disabled onclick="sendWA()">
+        <span>💬</span> Kirim ke WhatsApp Cendekia
+      </button>
+
+    </div><!-- /form-body -->
+
+    <footer style="margin-top:0;">
+      © <span class="footerYearInner"></span> <strong>Cendekia Co.</strong> · cendekia-web.vercel.app
+    </footer>
+
+  </div><!-- /page-daftar -->
+
+
+  <!-- ════ PAGE: INFO ════ -->
+  <div class="page info-page" id="page-info">
+
+    <div class="form-header">
+      <h2>ℹ️ Tentang Kami</h2>
+      <p>Cendekia Co. – Les Privat Gandusari, Trenggalek</p>
+    </div>
+
+    <section style="background:var(--soft);padding:28px 20px;">
+      <div class="section-title">Visi &amp; <span>Misi</span></div>
+      <div class="section-sub" style="margin-bottom:16px;">Mengapa kami hadir?</div>
+      <div style="background:var(--white);border-radius:18px;padding:20px;font-size:14px;font-weight:600;line-height:1.8;color:var(--text);box-shadow:0 4px 14px rgba(26,46,108,.06);">
+        Cendekia hadir untuk memastikan setiap anak di Trenggalek mendapat akses belajar berkualitas
+        tanpa harus jauh-jauh ke kota. Kami percaya bahwa lingkungan belajar yang nyaman—di rumah
+        sendiri—membantu anak lebih mudah memahami pelajaran dan tumbuh percaya diri.
+      </div>
+    </section>
+
+    <section style="background:var(--soft);padding:28px 20px;">
+      <div class="section-title">Hubungi <span>Langsung</span></div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px;">
+        <a href="https://wa.me/6283850387328" target="_blank"
+          style="background:#25D366;color:#fff;border-radius:16px;padding:16px 20px;
+          display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:800;font-size:15px;">
+          <span style="font-size:24px;">💬</span>
+          <div><div style="font-size:11px;opacity:.8;">WhatsApp Utama</div>0838-5038-7328</div>
+        </a>
+        <a href="tel:087754121541"
+          style="background:var(--white);color:var(--navy);border-radius:16px;padding:16px 20px;
+          display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:800;font-size:15px;
+          border:2px solid #d8e6f7;">
+          <span style="font-size:24px;">📞</span>
+          <div><div style="font-size:11px;color:var(--muted);">Telepon Alternatif</div>0877-5412-1541</div>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      © <span class="footerYearInner"></span> <strong>Cendekia Co.</strong> · cendekia-web.vercel.app
+    </footer>
+
+  </div><!-- /page-info -->
+
+
+  <!-- ── BOTTOM NAV ── -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="bnav-item active" data-tab="home" onclick="switchTab('home')">
+      <span class="bnav-icon">🏠</span> Beranda
+    </button>
+    <button class="bnav-item" data-tab="daftar" onclick="switchTab('daftar')">
+      <span class="bnav-icon">📝</span> Daftar
+    </button>
+    <button class="bnav-item" data-tab="info" onclick="switchTab('info')">
+      <span class="bnav-icon">ℹ️</span> Info
+    </button>
+  </nav>
+
+  <!-- FLOATING WA -->
+  <div class="wa-float" id="waFloat">
+    <div class="wa-label">💬 Chat Sekarang!</div>
+    <a href="https://wa.me/6283850387328?text=Halo%20Cendekia%2C%20saya%20ingin%20info%20les%20privat"
+      class="wa-btn" target="_blank" rel="noopener">💬</a>
+  </div>
+
+
+  <script>
+    // ── FOOTER YEAR (real) ──
+    const yr = new Date().getFullYear();
+    document.getElementById('footerYear').textContent = yr;
+    document.querySelectorAll('.footerYearInner').forEach(el => el.textContent = yr);
+
+    // ── TAB SWITCHING ──
+    function switchTab(tab) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById('page-' + tab).classList.add('active');
+      document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
+      window.scrollTo(0, 0);
+      // hide WA float on daftar tab
+      document.getElementById('waFloat').style.display = (tab === 'daftar') ? 'none' : 'flex';
+    }
+
+    // ── HERO PHOTO UPLOAD ──
+    const heroCircle = document.getElementById('heroCircle');
+    const photoInput = document.getElementById('photoInput');
+    const heroImg    = document.getElementById('heroImg');
+    heroCircle.addEventListener('click', () => photoInput.click());
+    photoInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => { heroImg.src = ev.target.result; };
+      reader.readAsDataURL(file);
+    });
+
+    // ── CHIPS (mata pelajaran) ──
+    const chips = document.querySelectorAll('.chip');
+    const customWrap = document.getElementById('customWrap');
+    const selectedSubjects = new Set();
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const val = chip.dataset.val;
+        if (chip.classList.contains('selected')) {
+          chip.classList.remove('selected');
+          selectedSubjects.delete(val);
+        } else {
+          chip.classList.add('selected');
+          selectedSubjects.add(val);
+        }
+        // toggle custom input
+        const hasKonsultasi = selectedSubjects.has('konsultasi');
+        customWrap.classList.toggle('open', hasKonsultasi);
+        buildPreview();
+      });
+    });
+
+    // ── FORM INPUTS → PREVIEW ──
+    ['fNama','fAlamat','fKelas','fCustomMapel'].forEach(id => {
+      document.getElementById(id).addEventListener('input', buildPreview);
+    });
+
+    function buildPreview() {
+      const nama   = document.getElementById('fNama').value.trim();
+      const alamat = document.getElementById('fAlamat').value.trim();
+      const kelas  = document.getElementById('fKelas').value;
+      const custom = document.getElementById('fCustomMapel').value.trim();
+
+      // Build subject list
+      let mapelList = [...selectedSubjects].filter(v => v !== 'konsultasi');
+      if (custom) mapelList.push(custom);
+      const mapelStr = mapelList.length ? mapelList.join(', ') : '–';
+      const isKonsultasi = selectedSubjects.has('konsultasi');
+
+      const ready = nama && alamat && kelas && (mapelList.length > 0 || isKonsultasi);
+      document.getElementById('btnSend').disabled = !ready;
+
+      if (!nama && !alamat && !kelas) {
+        document.getElementById('previewText').textContent = 'Isi form di atas untuk melihat preview pesan...';
+        return;
+      }
+
+      let msg = `Halo Cendekia 👋\n\nSaya ingin mendaftarkan anak untuk *Les Privat Cendekia*.\n\n`;
+      msg += `👤 *Nama Siswa:* ${nama || '–'}\n`;
+      msg += `📍 *Alamat:* ${alamat || '–'}\n`;
+      msg += `🏫 *Kelas:* ${kelas || '–'}\n`;
+      msg += `📚 *Mata Pelajaran:* ${mapelStr}\n`;
+      if (isKonsultasi) msg += `\n🗣️ Saya juga ingin konsultasi lebih lanjut mengenai program les yang sesuai.\n`;
+      msg += `\nMohon info selanjutnya. Terima kasih! 🙏`;
+
+      document.getElementById('previewText').textContent = msg;
+    }
+
+    // ── SEND TO WHATSAPP ──
+    function sendWA() {
+      const previewText = document.getElementById('previewText').textContent;
+      if (!previewText || previewText.startsWith('Isi form')) return;
+      const encoded = encodeURIComponent(previewText);
+      window.open('https://wa.me/6283850387328?text=' + encoded, '_blank');
+    }
+
+    // ── REVEAL ANIMATION ──
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
